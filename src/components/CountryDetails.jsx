@@ -6,6 +6,9 @@ import axios from "axios";
 const CountryDetails = ({ darkMode }) => {
   const { countryName } = useParams();
   const [countryData, setCountryData] = useState({});
+  const [countryCurrencies, setCountryCurrencies] = useState({});
+  const currency = [];
+  const codeToCountryMap = new Map();
 
   function capitalizeFirstLetter(string) {
     let country = string.replaceAll("-", " ");
@@ -16,10 +19,22 @@ const CountryDetails = ({ darkMode }) => {
     async function getCountryData() {
       const { data } = await axios.get(`https://restcountries.com/v3.1/name/${countryName.replaceAll("-", " ")}`);
       setCountryData(data[0]);
+      setCountryCurrencies(data[0].currencies);
     }
-    document.title = `Countries | ${capitalizeFirstLetter(countryName)}`;
     getCountryData();
+
+    async function getCountriesCode() {
+      const { data } = await axios.get("https://restcountries.com/v3.1/all");
+      data.map((country) => codeToCountryMap.set(country.cca3, country.name.common));
+    }
+    getCountriesCode();
+
+    document.title = `Countries | ${capitalizeFirstLetter(countryName)}`;
   }, [countryName]);
+
+  for (const prop in countryCurrencies) {
+    currency.push(countryCurrencies[prop].name);
+  }
 
   return (
     <section className="max-w-[1400px] mx-auto py-12 px-6 flex flex-col gap-12 lg:gap-16">
@@ -52,6 +67,10 @@ const CountryDetails = ({ darkMode }) => {
               Capital: <span className="font-normal">{countryData?.capital}</span>
             </li>
             <li className="font-semibold">
+              Currency:{" "}
+              <span className="font-normal">{currency.map((item, index) => (index === 0 ? item : `, ${item}`))}</span>
+            </li>
+            <li className="font-semibold">
               Location:{" "}
               <a href={countryData?.maps?.googleMaps} target="_blank" className="font-normal underline">
                 {countryData?.maps?.googleMaps}
@@ -64,8 +83,9 @@ const CountryDetails = ({ darkMode }) => {
           <div>
             <h3 className="text-xl font-semibold mb-2">Border Countries</h3>
             <ul className="flex gap-2">
-              {countryData?.borders?.map((border) => (
+              {countryData?.borders?.map((border, index) => (
                 <li
+                  key={index}
                   className={`${darkMode ? "bg-darkBlue" : "bg-veryLightGray"} shadow py-1 px-2 select-none rounded-sm`}
                 >
                   {border}

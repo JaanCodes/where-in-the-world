@@ -7,15 +7,18 @@ const Countries = ({ darkMode }) => {
   const [countries, setCountries] = useState([]);
   const [searchCountry, setSearchCountry] = useState("");
   const [selectedRegion, setSelectedRegion] = useState("");
+  const codeToCountryMap = new Map();
 
   useEffect(() => {
     async function getCountriesData() {
       const { data } = await axios.get("https://restcountries.com/v3.1/all");
+      data.map((country) => codeToCountryMap.set(country.cca3, country.name.common));
       const countriesSliced = data.sort(() => 0.5 - Math.random()).slice(0, 16);
       setCountries(countriesSliced);
     }
-    document.title = "Rest Countries API";
     getCountriesData();
+
+    document.title = "Rest Countries API";
   }, []);
 
   async function getSearchCountryData() {
