@@ -6,6 +6,7 @@ import { useState } from "react";
 
 function App() {
   const [darkMode, setDarkMode] = useState(true);
+
   return (
     <div className={`${darkMode ? "bg-veryDarkBlue text-white" : "bg-veryLightGray"} min-h-screen`}>
       <BrowserRouter>

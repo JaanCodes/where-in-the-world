@@ -56,7 +56,7 @@ const Countries = ({ darkMode }) => {
               darkMode
                 ? "bg-darkBlue text-white placeholder:text-white"
                 : "bg-white text-darkBlue placeholder:text-darkBlue"
-            } rounded-md py-4 pl-10 lg:pl-12 w-full text-sm outline-none shadow`}
+            } rounded-md py-4 pl-10 lg:pl-12 pr-4 w-full text-sm outline-none shadow`}
             placeholder="Search for a country..."
           />
         </label>

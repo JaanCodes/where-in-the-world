@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { BsArrowLeft } from "react-icons/bs";
 import axios from "axios";
+import { countryCodeToName } from "../countryCodeData";
 
 const CountryDetails = ({ darkMode }) => {
   const { countryName } = useParams();
+  const navigate = useNavigate();
   const [countryData, setCountryData] = useState({});
   const [countryCurrencies, setCountryCurrencies] = useState({});
   const currency = [];
-  const codeToCountryMap = new Map();
 
   function capitalizeFirstLetter(string) {
     let country = string.replaceAll("-", " ");
@@ -22,12 +23,6 @@ const CountryDetails = ({ darkMode }) => {
       setCountryCurrencies(data[0].currencies);
     }
     getCountryData();
-
-    async function getCountriesCode() {
-      const { data } = await axios.get("https://restcountries.com/v3.1/all");
-      data.map((country) => codeToCountryMap.set(country.cca3, country.name.common));
-    }
-    getCountriesCode();
 
     document.title = `Countries | ${capitalizeFirstLetter(countryName)}`;
   }, [countryName]);
@@ -80,19 +75,25 @@ const CountryDetails = ({ darkMode }) => {
               Top Level Domain: <span className="font-normal">{countryData?.tld?.[0]}</span>
             </li>
           </ul>
-          <div>
-            <h3 className="text-xl font-semibold mb-2">Border Countries</h3>
-            <ul className="flex gap-2">
-              {countryData?.borders?.map((border, index) => (
-                <li
-                  key={index}
-                  className={`${darkMode ? "bg-darkBlue" : "bg-veryLightGray"} shadow py-1 px-2 select-none rounded-sm`}
-                >
-                  {border}
-                </li>
-              ))}
-            </ul>
-          </div>
+          {countryData?.borders ? (
+            <div>
+              <h3 className="text-xl font-semibold mb-2">Border Countries</h3>
+
+              <ul className="flex gap-2 flex-wrap">
+                {countryData?.borders?.map((border, index) => (
+                  <li
+                    onClick={() => navigate(`/country/${countryCodeToName[border].toLowerCase().replaceAll(" ", "-")}`)}
+                    key={index}
+                    className={`${
+                      darkMode ? "bg-darkBlue" : "bg-veryLightGray"
+                    } shadow py-1 px-2 text-center cursor-pointer rounded-sm`}
+                  >
+                    {countryCodeToName[border]}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
         </div>
       </article>
     </section>
