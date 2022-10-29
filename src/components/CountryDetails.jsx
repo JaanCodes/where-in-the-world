@@ -44,7 +44,7 @@ const CountryDetails = ({ darkMode }) => {
       </Link>
       <article className="grid grid-cols-1 lg:grid-cols-2 items-center gap-16">
         <div>
-          <img className="w-full rounded shadow-xl" src={countryData?.flags?.svg} alt="" />
+          <img className="w-full rounded shadow-xl" loading="lazy" src={countryData?.flags?.svg} alt="" />
         </div>
         <div>
           <h2 className="text-3xl font-semibold mb-6">{countryData?.name?.common}</h2>

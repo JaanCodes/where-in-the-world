@@ -7,7 +7,7 @@ const CountryCart = ({ country, darkMode }) => {
       to={`country/${country?.name?.common?.toLowerCase().replaceAll(" ", "-")}`}
       className={`mb-4 shadow-sm rounded-lg overflow-hidden ${darkMode ? "bg-darkBlue text-white" : "bg-white"}`}
     >
-      <img src={country?.flags?.svg} className="w-full h-44 object-cover" alt="" />
+      <img src={country?.flags?.svg} loading="lazy" className="w-full h-44 object-cover" alt="" />
       <div className={`${darkMode ? "text-white" : "text-veryDarkBlue"} p-6`}>
         <h3 className="text-lg font-semibold mb-2">{country?.name?.common}</h3>
         <p className="font-semibold text-sm mb-1">
